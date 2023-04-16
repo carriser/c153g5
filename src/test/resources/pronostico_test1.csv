@@ -1,13 +1,13 @@
-participante,equipo1,gana1,empata,gana2,equipo2
-Mariana,Argentina,X,,,Arabia Saudita
-Mariana,Polonia,,X,,Mexico
-Mariana,Argentina,X,,,Mexico
-Mariana,Arabia Saudita,,,X,Polonia
-Mariana,Argentina,X,,,Polonia
-Mariana,Arabia Saudita,,X,,Mexico
-Pedro,Argentina,X,,,Arabia Saudita
-Pedro,Polonia,,,X,Mexico
-Pedro,Argentina,X,,,Mexico
-Pedro,Arabia Saudita,,X,,Polonia
-Pedro,Argentina,X,,,Polonia
-Pedro,Arabia Saudita,,X,,Mexico
+participante,ronda,equipo1,gana1,empata,gana2,equipo2
+Mariana,1,Argentina,X,,,Arabia Saudita
+Mariana,1,Polonia,,X,,Mexico
+Mariana,1,Argentina,X,,,Mexico
+Mariana,1,Arabia Saudita,,,X,Polonia
+Mariana,1,Argentina,X,,,Polonia
+Mariana,1,Arabia Saudita,,X,,Mexico
+Pedro,1,Argentina,X,,,Arabia Saudita
+Pedro,1,Polonia,,,X,Mexico
+Pedro,1,Argentina,X,,,Mexico
+Pedro,1,Arabia Saudita,,X,,Polonia
+Pedro,1,Argentina,X,,,Polonia
+Pedro,1,Arabia Saudita,,X,,Mexico

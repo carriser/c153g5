@@ -7,7 +7,7 @@ public class Pronostico {
 	private EnumResultados resultadoApuesta;
 	private int puntos;
 	
-	
+	// modifico constructor
 	public Pronostico(Partido partido, Equipo equipo, EnumResultados resultadoApuesta) {
 		super();
 		this.partido = partido;
@@ -35,7 +35,8 @@ public class Pronostico {
 	// método que suma puntos dependiendo del resultado que me trae de Partido
 	public int puntos() {
 		EnumResultados resultadoPartido = partido.resultado2(equipo);  // variable con el resultado del partido
-		if(resultadoApuesta.equals(resultadoPartido)) {		   // pregunto si la apuesta coincide con resultado partido
+		// pregunto si la apuesta coincide con resultado partido
+		if(resultadoApuesta.equals(resultadoPartido)) {
 			return 1;
 		} else {
 			return 0;	

@@ -1,14 +1,15 @@
 package ap.utn.edu.ar;
 
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
 
@@ -20,7 +21,7 @@ public class Main {
 		Collection<Partido> partidos = new ArrayList<Partido>();
 		
 		// leer archivo resultados.csv en modo test
-		// Path archResultados = Paths.get("E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\resultados_test1.csv");
+		//Path archResultados = Paths.get("E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\resultados_test1.csv");
 		
 		// el enunciado del tp pide que los archivos sean pasados como parámetro
 		Path archResultados = Paths.get(args[0]);
@@ -41,15 +42,26 @@ public class Main {
 				primera = false; 
 			} else {
 				System.out.println(linea);
-				// primer línea: Argentina,1,2,Arabia Saudita
+				// primer línea entrega 1: Argentina,1,2,Arabia Saudita
+				// primer línea entrega 2: 1,Argentina,1,2,Arabia Saudita
 				// cuando leo las lineas creamos el String[] con cada campo de cada línea
 				String[] campos = linea.split(",");
 				// al leer la línea, algunos datos los utilizo para instanciar objetos
+				
+				/* Entrega 1:
 				Equipo equipo1 = new Equipo(campos[0]);
 				Equipo equipo2 = new Equipo(campos[3]);
 				Partido partido = new Partido(equipo1,equipo2);
 				partido.setGolesEquipo1(Integer.parseInt(campos[1]));
-				partido.setGolesEquipo2(Integer.parseInt(campos[2]));
+				partido.setGolesEquipo2(Integer.parseInt(campos[2]));*/
+				
+				// Entrega 2:
+				Ronda nroRonda = new Ronda(campos[0]);
+				Equipo equipo1 = new Equipo(campos[1]);
+				Equipo equipo2 = new Equipo(campos[4]);
+				Partido partido = new Partido(nroRonda,equipo1,equipo2);
+				partido.setGolesEquipo1(Integer.parseInt(campos[2]));
+				partido.setGolesEquipo2(Integer.parseInt(campos[3]));
 				// una vez leído el partido se guarda en una colección
 				partidos.add(partido);
 			}
@@ -83,50 +95,75 @@ public class Main {
 			} else {
 				// para chequear la lectura del archivo lo imprimimos por consola
 				System.out.println(linea);
-				// primer línea: Argentina,X,,,Arabia Saudita
+				// primer línea entrega 1: Argentina,X,,,Arabia Saudita
+				// primer línea entrega 2: Mariana,1,Argentina,X,,,Arabia Saudita
 				// cuando leo las lineas creamos el String[] con cada campo de cada línea
 				String[] campos = linea.split(",");
 				// al leer la línea, algunos datos los utilizo para instanciar objetos
-				Equipo equipo1 = new Equipo(campos[0]);
-				Equipo equipo2 = new Equipo(campos[4]);
 				
+				/* Entrega 1:
+				Equipo equipo1 = new Equipo(campos[0]);
+				Equipo equipo2 = new Equipo(campos[4]);*/
+				
+				// Entrega 2:
+				Persona persona1 = new Persona(campos[0]);
+				Ronda nroRonda = new Ronda(campos[1]); 
+				Equipo equipo1 = new Equipo(campos[2]);
+				Equipo equipo2 = new Equipo(campos[6]);
 				// ahora necesitamos un partido, los equipos y el resultado para construir un pronóstico
 				Partido partido = null;
 				
 				// para saber si el partido con los resultados coincide con el partido del pronóstico
 				// recorremos la colección partidos y lo comparamos con el de pronóstico
+				
+				/* Entrega 1:
 				for(Partido partidoCol : partidos) {
 					if(partidoCol.getEquipo1().getNombre().equals(equipo1.getNombre()) &&
 						partidoCol.getEquipo2().getNombre().equals(equipo2.getNombre())){
 						// cuando coincide el partido de la colección con el partido del pronóstico hago
 						partido = partidoCol;
 					}
+				}*/
+				
+				// Entrega 2:
+				for(Partido partidoCol : partidos) {
+					if( //nroRonda.getNroRonda().equals(partidoCol.getNroRonda().getPartidos()) &&  //linea sugerida por eclipse
+						partidoCol.getEquipo1().getNombre().equals(equipo1.getNombre()) &&
+						partidoCol.getEquipo2().getNombre().equals(equipo2.getNombre())){
+						// cuando coincide el partido de la colección con el partido del pronóstico hago
+						partido = partidoCol;
+					}
 				}
+				
 				// creamos equipo y resultado
 				Equipo equipo = null;
 				EnumResultados resultado = null;
 				
 				// preguntamos si la apuesta coincide con el resultado del partido
-				if("X".equals(campos[1])) {
+				if("X".equals(campos[2])) {
 					equipo = equipo1;
 					resultado = EnumResultados.GANADOR;
 				}
 				
-				if("X".equals(campos[2])) {
+				if("X".equals(campos[3])) {
 					equipo = equipo1;
 					resultado = EnumResultados.EMPATE;
 				}
 				
-				if("X".equals(campos[3])) {
+				if("X".equals(campos[4])) {
 					equipo = equipo1;
 					resultado = EnumResultados.PERDEDOR;
 				}
 				
-				Pronostico pronostico = new Pronostico(partido, equipo, resultado );
+				Pronostico pronostico = new Pronostico(partido, equipo, resultado);
 				
-				// al pasarle los parámetros a pronostico utilizamos el método puntos()
-				// para sumar puntos
+				// al pasarle los parámetros a pronostico utilizamos el método puntos() para sumar puntos
 				puntos += pronostico.puntos();
+				
+				// Entrega 2: una vez que verifica aciertos o no, genero un archivo con el
+				// puntaje obtenido por cada apostador
+				exportarCSV(persona1, puntos);
+				
 			}
 		}
 		
@@ -134,52 +171,29 @@ public class Main {
 		
 		// finalmente mostramos los puntos
 		System.out.println("Los puntos obtenidos por la apuesta del usuario es: " + puntos);
-		
-		/* hecho por mí
-		Equipo equipo1 = new Equipo("Argentina");
-		Equipo equipo2 = new Equipo("Arabia Saudita");
-		Equipo equipo3 = new Equipo("Polonia");
-		Equipo equipo4 = new Equipo("Mexico");		
-		
-		Map<String, Equipo> equipos = new HashMap<String, Equipo>();
-		equipos.put("Argentina", equipo1);
-		equipos.put("Arabia Saudita", equipo2);
-		equipos.put("Polonia", equipo3);
-		equipos.put("Mexico", equipo4);
-
-		Path archResultados = Paths.get(args[0]); // paso la ruta del archivo como argumento del Main
-		Path archPronostico = Paths.get(args[1]);
-				
-		try {
-			List<String> lineasArchResultados = Files.readAllLines(archResultados);
-			boolean primero = true;
-			for(String lineaResultados : lineasArchResultados) {
-				if(primero) {
-					primero = false;
-				} else {
-					if(!lineaResultados.isBlank()) {		//todo lo incluido en este if el IDE nos ayuda a transformarlo en una función
-						procesarLinea(equipos, lineaResultados);
-					}
-				}
-			}
-		} catch (IOException e) {
-			System.err.println("Falló la apertura del archivo");
-			System.exit(1);
-		}*/
-
-
 	}
-
-	/* hecho por mí
-	private static void procesarLinea(Map<String, Equipo> equipos, String lineaResultados) {
+	
+	public static void exportarCSV(Persona persona1, int puntos) {
 		
-		System.out.println(lineaResultados);
-		String[] split = lineaResultados.split(",");	
-		String equipo1 = split[0];
-		int cantGoles1 = Integer.parseInt(split[1]);
-		int cantGoles2 = Integer.parseInt(split[2]);
-		String equipo2 = split[3];
+		String archPuntaje = "E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\puntajes_test1.csv";
 		
-	}*/
+		if(!Files.exists(Paths.get(archPuntaje))) {
+			try {
+				Files.createFile(Paths.get(archPuntaje));
+			} catch (IOException e) {
+				System.err.println("Falló la creación del archivo");
+				System.exit(1);
+			}
+		} else {
+			try {
+				Files.writeString(Paths.get(archPuntaje), "hola Susana", StandardOpenOption.APPEND);
+				
+			} catch (IOException e) {
+				System.err.println("No se tuvo acceso al archivo");
+				System.exit(1);
+			}
+		}
+		
+	}
 
 }

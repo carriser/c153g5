@@ -2,22 +2,29 @@ package ap.utn.edu.ar;
 
 public class Partido {
  
+	private Ronda nroRonda;
 	private Equipo equipo1;
 	private Equipo equipo2;
 	private int golesEquipo1;
 	private int golesEquipo2;
 	
-	public Partido(Equipo equipo1, Equipo equipo2) {
+	public Partido(Ronda nroRonda, Equipo equipo1, Equipo equipo2) {
+		this.nroRonda = nroRonda;
 		this.equipo1 = equipo1;
 		this.equipo2 = equipo2;
 	}
 
-	public Partido(Equipo equipo1, Equipo equipo2, int golesEquipo1, int golesEquipo2) {
+	public Partido(Ronda rondaNro, Equipo equipo1, Equipo equipo2, int golesEquipo1, int golesEquipo2) {
 		super();
+		this.nroRonda = nroRonda;
 		this.equipo1 = equipo1;
 		this.equipo2 = equipo2;
 		this.golesEquipo1 = golesEquipo1;
 		this.golesEquipo2 = golesEquipo2;
+	}
+
+	public Ronda getNroRonda() {
+		return nroRonda;
 	}
 
 	public int getGolesEquipo1() {
@@ -76,4 +83,5 @@ public class Partido {
 			}
 		}
 	}
+
 }
