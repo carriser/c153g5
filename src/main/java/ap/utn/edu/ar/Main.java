@@ -67,11 +67,30 @@ public class Main {
 			}
 		}
 		
+		// leer archivo de apostadores
+		primera = true;
+		Path archApostador = Paths.get(args[1]);
+		List<String> lineasArchApostador = null;
+		try {
+			lineasArchApostador = Files.readAllLines(archApostador);
+		} catch (IOException e) {
+			System.err.println("Falló la apertura del archivo");
+			System.exit(1);
+		}
+		
+		for(String linea : lineasArchApostador) {
+			if(primera) {
+				primera = false; 
+			} else {
+				String[] campos = linea.split(",");
+				Persona apostador = new Persona(campos[1]);
+				}
+		}
+		
 		// leer archivo pronostico.csv en modo test
 		//Path archPronostico = Paths.get("E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\pronostico_test1.csv");
-		
 		// el enunciado del tp pide que los archivos sean pasados como parámetro
-		Path archPronostico = Paths.get(args[1]);
+		Path archPronostico = Paths.get(args[2]);
 		List<String> lineasArchPronostico = null;
 		
 		try {
@@ -85,6 +104,7 @@ public class Main {
 		
 		// cada vez que se procese un pronostico sumamos los puntos obtenidos en la variable puntos
 		int puntos = 0;
+		String apostador = "";
 		
 		// procesamos el archivo
 		// para saltear la primer línea del archivo utilizamos la variable primera ya creada
@@ -93,6 +113,14 @@ public class Main {
 			if(primera) {
 				primera = false; 
 			} else {
+				try {
+					if(linea.length() != 7) {
+						
+					}
+				} catch (Exception e) {
+					System.err.println("El archivo no cumple con las condciones mínimas");
+					System.exit(1);
+				}
 				// para chequear la lectura del archivo lo imprimimos por consola
 				System.out.println(linea);
 				// primer línea entrega 1: Argentina,X,,,Arabia Saudita
@@ -106,10 +134,11 @@ public class Main {
 				Equipo equipo2 = new Equipo(campos[4]);*/
 				
 				// Entrega 2:
-				Persona persona1 = new Persona(campos[0]);
+				Persona persona = new Persona(campos[0]);
 				Ronda nroRonda = new Ronda(campos[1]); 
 				Equipo equipo1 = new Equipo(campos[2]);
 				Equipo equipo2 = new Equipo(campos[6]);
+				
 				// ahora necesitamos un partido, los equipos y el resultado para construir un pronóstico
 				Partido partido = null;
 				
@@ -127,30 +156,34 @@ public class Main {
 				
 				// Entrega 2:
 				for(Partido partidoCol : partidos) {
-					if( //nroRonda.getNroRonda().equals(partidoCol.getNroRonda().getPartidos()) &&  //linea sugerida por eclipse
+					if( partidoCol.getNroRonda().getNroRonda().equals(nroRonda.getNroRonda()) &&
 						partidoCol.getEquipo1().getNombre().equals(equipo1.getNombre()) &&
 						partidoCol.getEquipo2().getNombre().equals(equipo2.getNombre())){
-						// cuando coincide el partido de la colección con el partido del pronóstico hago
+						// cuando coincide la ronda y el partido de la colección con el partido
+						// del pronóstico hago:
+						
 						partido = partidoCol;
 					}
 				}
+				
+				
 				
 				// creamos equipo y resultado
 				Equipo equipo = null;
 				EnumResultados resultado = null;
 				
 				// preguntamos si la apuesta coincide con el resultado del partido
-				if("X".equals(campos[2])) {
+				if("X".equals(campos[3])) {
 					equipo = equipo1;
 					resultado = EnumResultados.GANADOR;
 				}
 				
-				if("X".equals(campos[3])) {
+				if("X".equals(campos[4])) {
 					equipo = equipo1;
 					resultado = EnumResultados.EMPATE;
 				}
 				
-				if("X".equals(campos[4])) {
+				if("X".equals(campos[5])) {
 					equipo = equipo1;
 					resultado = EnumResultados.PERDEDOR;
 				}
@@ -158,11 +191,14 @@ public class Main {
 				Pronostico pronostico = new Pronostico(partido, equipo, resultado);
 				
 				// al pasarle los parámetros a pronostico utilizamos el método puntos() para sumar puntos
+					
 				puntos += pronostico.puntos();
 				
 				// Entrega 2: una vez que verifica aciertos o no, genero un archivo con el
 				// puntaje obtenido por cada apostador
-				exportarCSV(persona1, puntos);
+				exportarCSV();
+				
+				// aquí debería escribir el archivo con nombre y puntaje o escribir un Map
 				
 			}
 		}
@@ -173,27 +209,18 @@ public class Main {
 		System.out.println("Los puntos obtenidos por la apuesta del usuario es: " + puntos);
 	}
 	
-	public static void exportarCSV(Persona persona1, int puntos) {
-		
-		String archPuntaje = "E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\puntajes_test1.csv";
-		
+	// método para crear archivo con los puntos obtenidos por cada participante
+	public static void exportarCSV() {
+		String archPuntaje = "E:\\Proyectos Java\\Curso\\tp-pronosticos\\src\\test\\resources\\puntajes_test1.csv";	
 		if(!Files.exists(Paths.get(archPuntaje))) {
 			try {
 				Files.createFile(Paths.get(archPuntaje));
+				String primerLinea = "Nombre" + "," + "puntos";
+				Files.writeString(Paths.get(archPuntaje), primerLinea);
 			} catch (IOException e) {
 				System.err.println("Falló la creación del archivo");
 				System.exit(1);
 			}
-		} else {
-			try {
-				Files.writeString(Paths.get(archPuntaje), "hola Susana", StandardOpenOption.APPEND);
-				
-			} catch (IOException e) {
-				System.err.println("No se tuvo acceso al archivo");
-				System.exit(1);
-			}
-		}
-		
+		}		
 	}
-
 }

@@ -3,6 +3,10 @@ package ap.utn.edu.ar;
 public class Persona {
 	
 	private String nombre;
+	
+	public Persona() {
+		
+	}
 
 	public Persona(String nombre) {
 		super();
